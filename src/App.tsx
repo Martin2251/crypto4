@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import CryptoSummary from './components/CryptoSummary';
 
 export type Crypto={
 ath: number;
@@ -25,7 +26,7 @@ function App() {
   return (
     <div className="App">
       {cryptos ? cryptos.map((crypto) =>{
-        return <p>{crypto.name + '$' + crypto.current_price}</p>
+      return <CryptoSummary crypto={crypto}  />
 
       }) : <p>no cryptos !!</p>}
     </div>
