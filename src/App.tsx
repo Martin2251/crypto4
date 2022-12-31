@@ -5,7 +5,8 @@ import { Crypto } from './types/Crypto';
 
 
 function App() {
-  const [cryptos, setCryptos] =useState<Crypto[] | null>();
+  const [cryptos, setCryptos] =useState<Crypto[] | null>(null);
+  const [selected, setSelected] =useState <Crypto | null >();
 
 
   useEffect(() => {
@@ -15,12 +16,23 @@ function App() {
     });
   },[]);
   return (
+    <>
     <div className="App">
+      <select onChange={(e) =>{
+       const c =  cryptos?.find((x) => x.id === e.target.value);
+       setSelected(c);
+       }}
+       defaultValue="default"
+       >
       {cryptos ? cryptos.map((crypto) =>{
-      return <CryptoSummary crypto={crypto}  />
+     return <option key={crypto.id} value={crypto.id}>{crypto.name}</option>
 
       }) : <p>no cryptos !!</p>}
+      <option value="default">choose an option</option>
+      </select>
     </div>
+    {selected &&<CryptoSummary crypto={selected}  />}
+    </>
     
   );
 }
