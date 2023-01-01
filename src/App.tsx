@@ -87,6 +87,11 @@ function App() {
       }) : <p>no cryptos !!</p>}
       <option value="default">choose an option</option>
       </select>
+      <select>
+        <option>30 days</option>
+        <option>7 days</option>
+        <option>1 day</option>
+      </select>
     </div>
     {selected &&<CryptoSummary crypto={selected}  />}
     {data &&<div style={{width:600}}><Line options={options} data={data}  /></div>}
