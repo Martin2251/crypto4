@@ -30,7 +30,18 @@ function App() {
   const [cryptos, setCryptos] =useState<Crypto[] | null>(null);
   const [selected, setSelected] =useState <Crypto | null >();
   const [data, setData] = useState<ChartData<"line">>();
-  const [options,setOptions] = useState<ChartOptions<"line">>();
+  const [options,setOptions] = useState<ChartOptions<"line">>({
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+      title: {
+        display: true,
+        text: 'Chart.js Line Chart',
+      },
+    },
+  });
 
 
   useEffect(() => {
@@ -45,6 +56,24 @@ function App() {
       <select onChange={(e) =>{
        const c =  cryptos?.find((x) => x.id === e.target.value);
        setSelected(c);
+       //request 
+       axios.get('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30&interval=daily').then((response) => {
+        //setdata
+
+        console.log(response.data)
+        setData({
+            labels:[1,2,3,4],
+            datasets: [
+              {
+                label: 'Dataset 1',
+                data: [4,7,10,3],
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+              },
+            ],
+        })
+       })
+       // update data state
        }}
        defaultValue="default"
        >
@@ -56,6 +85,7 @@ function App() {
       </select>
     </div>
     {selected &&<CryptoSummary crypto={selected}  />}
+    {data &&<Line options={options} data={data}  />}
     </>
     
   );
