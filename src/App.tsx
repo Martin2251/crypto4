@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import moment from 'moment';
 import CryptoSummary from './components/CryptoSummary';
 import { Crypto } from './types/Crypto';
 import {
@@ -63,7 +64,7 @@ function App() {
         console.log(response.data)
         setData({
             labels:response.data.prices.map((price: number[]) =>{
-              return price[0]
+              return moment.unix(price[0]/ 1000).format('DD-MM-YYYY');
 
             }),
             datasets: [
