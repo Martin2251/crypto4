@@ -57,16 +57,19 @@ function App() {
        const c =  cryptos?.find((x) => x.id === e.target.value);
        setSelected(c);
        //request 
-       axios.get('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30&interval=daily').then((response) => {
+       axios.get(`https://api.coingecko.com/api/v3/coins/${c?.id}/market_chart?vs_currency=usd&days=30&interval=daily`).then((response) => {
         //setdata
 
         console.log(response.data)
         setData({
-            labels:[1,2,3,4],
+            labels:response.data.prices.map((price: number[]) =>{
+              return price[0]
+
+            }),
             datasets: [
               {
                 label: 'Dataset 1',
-                data: [4,7,10,3],
+                data: response.data.prices.map((price:number[]) =>{return price[1]}),
                 borderColor: 'rgb(255, 99, 132)',
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
               },
@@ -85,7 +88,7 @@ function App() {
       </select>
     </div>
     {selected &&<CryptoSummary crypto={selected}  />}
-    {data &&<Line options={options} data={data}  />}
+    {data &&<div style={{width:600}}><Line options={options} data={data}  /></div>}
     </>
     
   );
