@@ -2,11 +2,35 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import CryptoSummary from './components/CryptoSummary';
 import { Crypto } from './types/Crypto';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import type { ChartData, ChartOptions } from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 
 function App() {
   const [cryptos, setCryptos] =useState<Crypto[] | null>(null);
   const [selected, setSelected] =useState <Crypto | null >();
+  const [data, setData] = useState<ChartData<"line">>();
+  const [options,setOptions] = useState<ChartOptions<"line">>();
 
 
   useEffect(() => {
