@@ -31,6 +31,7 @@ function App() {
   const [cryptos, setCryptos] =useState<Crypto[] | null>(null);
   const [selected, setSelected] =useState <Crypto | null >();
   const [data, setData] = useState<ChartData<"line">>();
+  const [range, setRange] =useState<Number>(30);
   const [options,setOptions] = useState<ChartOptions<"line">>({
     responsive: true,
     plugins: {
@@ -51,6 +52,32 @@ function App() {
       setCryptos(response.data);
     });
   },[]);
+
+  useEffect(()=>{
+       //request 
+       axios.get(`https://api.coingecko.com/api/v3/coins/${selected?.id}/market_chart?vs_currency=usd&days=${range}&interval=daily`)
+       .then((response) => {
+        //setdata
+
+        console.log(response.data);
+        setData({
+            labels:response.data.prices.map((price: number[]) =>{
+              return moment.unix(price[0]/ 1000).format('DD-MM-YYYY');
+
+            }),
+            datasets: [
+              {
+                label: 'Dataset 1',
+                data: response.data.prices.map((price:number[]) =>{return price[1]}),
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+              },
+            ],
+        });
+       });
+       // update data state
+    
+  }, [selected,range]);
   return (
     <>
     <div className="App">
@@ -87,10 +114,12 @@ function App() {
       }) : <p>no cryptos !!</p>}
       <option value="default">choose an option</option>
       </select>
-      <select>
-        <option>30 days</option>
-        <option>7 days</option>
-        <option>1 day</option>
+      <select onChange={(e)=>{
+        setRange(parseInt(e.target.value));
+      }}>
+        <option value={29}>30 days</option>
+        <option value={6}>7 days</option>
+        <option value={1}>1 day</option>
       </select>
     </div>
     {selected &&<CryptoSummary crypto={selected}  />}
