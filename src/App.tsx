@@ -36,7 +36,7 @@ function App() {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top' as const,
+        display:false,
       },
       title: {
         display: true,
@@ -54,15 +54,16 @@ function App() {
   },[]);
 
   useEffect(()=>{
+    if (!selected) return;
        //request 
-       axios.get(`https://api.coingecko.com/api/v3/coins/${selected?.id}/market_chart?vs_currency=usd&days=${range}&interval=daily`)
+       axios.get(`https://api.coingecko.com/api/v3/coins/${selected?.id}/market_chart?vs_currency=usd&days=${range}&${range === 1 ? 'interval=hourly' :`interval=daily`}`)
        .then((response) => {
         //setdata
 
         console.log(response.data);
         setData({
             labels:response.data.prices.map((price: number[]) =>{
-              return moment.unix(price[0]/ 1000).format('DD-MM-YYYY');
+              return moment.unix(price[0]/ 1000).format(range === 1 ? 'HH:MM': 'DD-MM-YYYY');
 
             }),
             datasets: [
@@ -74,6 +75,16 @@ function App() {
               },
             ],
         });
+        setOptions({responsive: true,
+          plugins: {
+            legend: {
+             display:false,
+            },
+            title: {
+              display: true,
+              text: ` ${selected?.name} Price over last ` + range + (range === 1 ? 'Day.':  'Days(s).'),
+            },
+          },})
        });
        // update data state
     
@@ -117,8 +128,8 @@ function App() {
       <select onChange={(e)=>{
         setRange(parseInt(e.target.value));
       }}>
-        <option value={29}>30 days</option>
-        <option value={6}>7 days</option>
+        <option value={30}>30 days</option>
+        <option value={7}>7 days</option>
         <option value={1}>1 day</option>
       </select>
     </div>
