@@ -7,7 +7,10 @@ export type AppProps = {
 
 const CryptoSummary = ({crypto}:AppProps): JSX.Element => {
   return (
-   <p>{crypto.name + '$' + crypto.current_price}</p>
+    <>
+   <span> {crypto.name + '$' + crypto.current_price}</span>
+   <input defaultValue={1000}></input>
+   </>
   )
 }
 
